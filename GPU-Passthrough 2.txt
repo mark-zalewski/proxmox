@@ -27,3 +27,5 @@ Setup the program to make advantage of the GPU hardware contained within the con
 When compared to VMs, GPU passthrough in LXC containers can provide various benefits, including better performance for graphics rich apps and greater resource usage.
 
 It does, however, need careful setup and will introduce additional complexity when compared to non-GPU capable containers.
+
+https://github.com/keylase/nvidia-patch
