@@ -7,11 +7,15 @@ Install fresh ProxMox baseline and update Prox Mox sources
 Per guide here: https://www.servethehome.com/proxmox-ve-5-initial-installation-checklist/ 26
 or here: Proxmox VE 6 Initial Installation Checklist - ServeTheHome 75
 
+```
 nano /etc/apt/sources.list
 - Add: deb http://download.proxmox.com/debian stretch pve-no-subscription
+```
 
+```
 nano /etc/apt/sources.list.d/pve-enterprise.list
 - Comment Out: # deb https://enterprise.proxmox.com/debian stretch pve-enterprise
+```
 
 Remove Prox Mox Nag Screen
 Per guide here: Remove Proxmox Subscription Notice (Tested to 8.0) | John's Computer Services 75
