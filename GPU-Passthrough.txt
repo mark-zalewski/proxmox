@@ -1,2 +1,129 @@
-Instructions used to enable GPU passthrough on Proxmox to LXC container.
+#1. Install host drivers
 
+When doing PCIe passthrough, the first step is to blacklist the driver to ensure the host kernel doesn’t try to load the device. Here we need to do the opposite: Install and configure the correct drivers.
+
+You need to install the kernel headers, which for me on Proxmox is the pve-headers package.
+
+Next, you’ll need to install the actual nvidia drivers. The easiest way to do this is to download the driver from nvidia.com. This not only ensures you’re using the latest driver, but means it won’t accidentally update during a system update, as it’s important that the host and guest OS have the exact same driver version. You can still install it using the system package manager, just be aware of updates - especially if the guest and host OS are different distributions.
+
+Next you’ll need to make sure the drivers are loaded on boot. To do this, edit the file /etc/modules-load.d/modules.conf and add the following to it:
+
+# Nvidia modules
+nvidia
+nvidia_uvm
+
+Once that’s done, you’ll need to update the initramfs with update-initramfs -u -k all.
+
+The final step is to add a udev rule to create the required device files for the nvidia driver, which for reasons aren’t created automatically. This is done in the /etc/udev/rules.d/70-nvidia.rules file:
+70-nvidia.rules
+
+KERNEL=="nvidia", RUN+="/bin/bash -c '/usr/bin/nvidia-smi -L && /bin/chmod 666 /dev/nvidia*'"
+KERNEL=="nvidia_uvm", RUN+="/bin/bash -c '/usr/bin/nvidia-modprobe -c0 -u && /bin/chmod 0666 /dev/nvidia-uvm*'"
+
+Now you can reboot, and run nvidia-smi to check the GPU is being detected correctly:
+
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 450.80.02    Driver Version: 450.80.02    CUDA Version: 11.0     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  GeForce GTX 760     Off  | 00000000:03:00.0 N/A |                  N/A |
+|  0%   34C    P0    N/A /  N/A |      0MiB /  1996MiB |     N/A      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+
+There’s my GPU being detected correctly, using driver version 450.80.02 - we’ll be needing this later.
+<aside>
+This is just a temporary GPU until I purchase something more suited for transcoding. Don’t judge me.
+</aside>
+
+#2. Configure container
+
+Next, create your container. There’s nothing special about this process, just choose the OS and resource requirements for you.
+
+Before starting your container, we need to make some changes to the config file directly to pass through the GPU. This config file will probably live in /etc/pve/lxc/<id>.conf, where id is the id of your container. You need to add the following lines:
+
+# Allow cgroup access
+lxc.cgroup2.devices.allow: c 195:* rwm
+lxc.cgroup2.devices.allow: c 243:* rwm
+
+# Pass through device files
+lxc.mount.entry: /dev/nvidia0 dev/nvidia0 none bind,optional,create=file
+lxc.mount.entry: /dev/nvidiactl dev/nvidiactl none bind,optional,create=file
+lxc.mount.entry: /dev/nvidia-uvm dev/nvidia-uvm none bind,optional,create=file
+lxc.mount.entry: /dev/nvidia-modeset dev/nvidia-modeset none bind,optional,create=file
+lxc.mount.entry: /dev/nvidia-uvm-tools dev/nvidia-uvm-tools none bind,optional,create=file
+
+These lines allow the container to communicate with the nvidia driver, and pass through the control files needed for the guest to actually communicate with the GPU. These lines probably won’t work out the box, so we need to compare them to our actual control files:
+
+$ ls -l /dev/nvidia*
+crw-rw-rw- 1 root root 195, 254 Dec 22 20:51 /dev/nvidia-modeset
+crw-rw-rw- 1 root root 243,   0 Dec 22 20:51 /dev/nvidia-uvm
+crw-rw-rw- 1 root root 243,   1 Dec 22 20:51 /dev/nvidia-uvm-tools
+crw-rw-rw- 1 root root 195,   0 Dec 22 20:51 /dev/nvidia0
+crw-rw-rw- 1 root root 195, 255 Dec 22 20:51 /dev/nvidiactl
+
+Note: If you don’t see all 5 files, it probably means the drivers haven’t loaded correctly. Best check the logs.
+
+These files are character devices (as shown by the c at the start of the line), which the kernel module uses to communicate with the hardware. lxc.mount.entry binds these into the container.
+
+The lxc.cgroup2.devices.allow lines denote the cgroups which own the nvidia drivers. For the some files we have, 195:* will match the groups owning those, and the uvm files will match 243:*. If the config doesn’t match, you’ll need to change it. Note that the order doesn’t matter, so long as the cgroup lines are before the mounts.
+<note>
+Older versions of Proxmox (before 7.0) use lxc.cgroup.devices.allow instead (without the 2).
+</note>
+
+#3. Install guest drivers
+
+Now that the host is configured, and the control files passed through, the guest needs configuring.
+
+The gist of the configuration is to also install the nvidia drivers, but without the kernel modules. The simplest way to do this is to use the same driver binary downloaded from nvidia.com, and run it with the --no-kernel-module argument.
+
+You can still install drivers using the system package manager, but ensure they’re kept in-sync with the host version. If you install the wrong ones, it’ll install correctly, but attempting to use the GPU will fail due to the mismatch (it’s nice enough to tell you this is the issue, though). On Ubuntu, the packages you’ll want are nvidia-headless-no-dkms-418-server and nvidia-utils-418-server for version 418 of the driver.
+
+#4. Test it
+
+Now, from your container, you should be able to run nvidia-smi, and it’ll show the right version GPU and driver:
++-----------------------------------------------------------------------------+
+| NVIDIA-SMI 450.80.02    Driver Version: 450.80.02    CUDA Version: 11.0     |
+|-------------------------------+----------------------+----------------------+
+| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+|                               |                      |               MIG M. |
+|===============================+======================+======================|
+|   0  GeForce GTX 760     Off  | 00000000:03:00.0 N/A |                  N/A |
+|  0%   34C    P0    N/A /  N/A |      0MiB /  1996MiB |     N/A      Default |
+|                               |                      |                  N/A |
++-------------------------------+----------------------+----------------------+
+
++-----------------------------------------------------------------------------+
+| Processes:                                                                  |
+|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+|        ID   ID                                                   Usage      |
+|=============================================================================|
+|  No running processes found                                                 |
++-----------------------------------------------------------------------------+
+This shows the GPU is detected correctly, but doesn’t prove it’s working correctly. The best way to do this is to actually try and use it. For me this involved installing Jellyfin, loading in some content and checking the GPU was doing the transcoding, not the CPU - Which it was!
+
+Because it’s simply passing through the device files rather than the actual PCIe device, you can repeat this process multiple times for multiple containers.
+
+#Limitations
+
+And now the sad part: Unfortunately this can’t be scaled indefinitely. Nvidia limits their consumer GPUs to 3 concurrent sessions. This means either 3 transcode jobs from 1 container, or 1 job from each of 3 containers - doesn’t matter. This only applies to active sessions, so in theory you could pass the GPU through to 10 containers, just so long as only 3 were using it at once.
+
+You can find out what your GPU supports on the NVENC support matrix under “Max # of concurrent sessions” - but chances are it’s just 3.
+
+Nvidia’s professional line “Quadro” have no such restrictions, however you will pay a premium for this, especially for the tier of cards you’d need to play games rather than simply transcode.
+
+You can also get around this limit using a patched driver, which claims very good compatibility. This is on my list to try once I start hitting the limit myself.
+
+Now you’ve got a GPU in your LXC container, go forth and do something useful with it! Like Folding@Home, Not crypto mining!
