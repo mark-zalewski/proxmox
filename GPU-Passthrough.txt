@@ -15,12 +15,13 @@ nvidia_uvm
 
 Once that’s done, you’ll need to update the initramfs with update-initramfs -u -k all.
 
+!*** Not sure about this
 The final step is to add a udev rule to create the required device files for the nvidia driver, which for reasons aren’t created automatically. This is done in the /etc/udev/rules.d/70-nvidia.rules file:
 70-nvidia.rules
 
 KERNEL=="nvidia", RUN+="/bin/bash -c '/usr/bin/nvidia-smi -L && /bin/chmod 666 /dev/nvidia*'"
 KERNEL=="nvidia_uvm", RUN+="/bin/bash -c '/usr/bin/nvidia-modprobe -c0 -u && /bin/chmod 0666 /dev/nvidia-uvm*'"
-
+***!
 Now you can reboot, and run nvidia-smi to check the GPU is being detected correctly:
 
 +-----------------------------------------------------------------------------+
