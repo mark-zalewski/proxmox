@@ -1,0 +1,29 @@
+Proxmox GPU Passthrough LXC: How to Setup?
+by Manu Menon | Apr 15, 2023
+
+Let us learn how to setup the proxmox gpu passthrough lxc with the support of our Proxmox.
+
+Overview: Proxmox GPU Passthrough LXC
+
+proxmox gpu passthrough lxc
+
+Proxmox is an open-source virtualization software that lets users construct and manage virtual machines (VMs) and containers such as Linux Containers (LXC).
+
+GPU passthrough is a Proxmox feature that allows VMs or LXC containers to directly access the GPU hardware, more graphics performance for applications like gaming, video editing, and machine learning.
+
+GPU passthrough in LXC containers necessitates additional setup procedures. This includes activating IOMMU on the host system, setting up the container to access the GPU hardware. And it also includes settin up the relevant drivers and software within the container.
+
+Setup: Proxmox GPU Passthrough LXC
+
+To enable GPU passthrough in a container, follow these general steps:
+- IOMMU must be enabled in the host system BIOS and Linux kernel.
+- On the host machine, install the required GPU drivers and applications.
+- Assign the GPU to the LXC container using the setup option “lxc.cgroup.devices.allow” in the container setup file.
+
+Install the GPU drivers and software required within the container.
+
+Setup the program to make advantage of the GPU hardware contained within the container.
+
+When compared to VMs, GPU passthrough in LXC containers can provide various benefits, including better performance for graphics rich apps and greater resource usage.
+
+It does, however, need careful setup and will introduce additional complexity when compared to non-GPU capable containers.

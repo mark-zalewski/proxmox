@@ -3,6 +3,7 @@
 When doing PCIe passthrough, the first step is to blacklist the driver to ensure the host kernel doesn’t try to load the device. Here we need to do the opposite: Install and configure the correct drivers.
 
 You need to install the kernel headers, which for me on Proxmox is the pve-headers package.
+apt install pve-headers-$(uname -r)
 
 Next, you’ll need to install the actual nvidia drivers. The easiest way to do this is to download the driver from nvidia.com. This not only ensures you’re using the latest driver, but means it won’t accidentally update during a system update, as it’s important that the host and guest OS have the exact same driver version. You can still install it using the system package manager, just be aware of updates - especially if the guest and host OS are different distributions.
 
@@ -126,4 +127,4 @@ Nvidia’s professional line “Quadro” have no such restrictions, however you
 
 You can also get around this limit using a patched driver, which claims very good compatibility. This is on my list to try once I start hitting the limit myself.
 
-Now you’ve got a GPU in your LXC container, go forth and do something useful with it! Like Folding@Home, Not crypto mining!
+https://github.com/keylase/nvidia-patch
