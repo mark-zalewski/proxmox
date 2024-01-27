@@ -1,9 +1,48 @@
-<mxfile host="app.diagrams.net" modified="2024-01-27T17:18:02.003Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15" version="23.0.2" etag="Z8oaW3ClaJWcK_66Nir-" type="github">
+<mxfile host="app.diagrams.net" modified="2024-01-27T22:31:16.338Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.3 Safari/605.1.15" etag="Lyv_B3IRgGDBYMDtnhKJ" version="23.0.2" type="github">
   <diagram name="Page-1" id="YtKWClYYP15dUkpFgDLi">
-    <mxGraphModel>
+    <mxGraphModel dx="1134" dy="827" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-1" value="Tron (Proxmox Hypervisor)" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_on_premise;strokeColor=#7D8998;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#5A6C86;dashed=0;" vertex="1" parent="1">
+          <mxGeometry x="110" y="150" width="1290" height="600" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-12" value="Hawkeye (VM - Docker Core Services)" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_on_premise;strokeColor=#7D8998;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#5A6C86;dashed=0;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-1">
+          <mxGeometry x="50" y="170" width="290" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-17" value="Portainer" style="swimlane;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-12">
+          <mxGeometry x="15" y="290" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-18" value="Container Orchestration" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-17">
+          <mxGeometry x="55" y="30" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-13" value="TrueNas Scale" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_on_premise;strokeColor=#7D8998;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#5A6C86;dashed=0;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-1">
+          <mxGeometry x="400" y="360" width="310" height="170" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-21" value="Route66 (ZFS Mirror)" style="swimlane;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-13">
+          <mxGeometry x="10" y="100" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-25" value="Container Data" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-21">
+          <mxGeometry x="20" y="28" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-23" value="Pompeii" style="swimlane;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-13">
+          <mxGeometry x="160" y="100" width="140" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-26" value="Download Staging" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-23">
+          <mxGeometry x="10" y="28" width="120" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-14" value="Black Widow (VM - Docker Movie Services )" style="points=[[0,0],[0.25,0],[0.5,0],[0.75,0],[1,0],[1,0.25],[1,0.5],[1,0.75],[1,1],[0.75,1],[0.5,1],[0.25,1],[0,1],[0,0.75],[0,0.5],[0,0.25]];outlineConnect=0;gradientColor=none;html=1;whiteSpace=wrap;fontSize=12;fontStyle=0;container=1;pointerEvents=0;collapsible=0;recursiveResize=0;shape=mxgraph.aws4.group;grIcon=mxgraph.aws4.group_on_premise;strokeColor=#7D8998;fillColor=none;verticalAlign=top;align=left;spacingLeft=30;fontColor=#5A6C86;dashed=0;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-1">
+          <mxGeometry x="770" y="170" width="290" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-19" value="Portainer" style="swimlane;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-14">
+          <mxGeometry x="15" y="290" width="260" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-20" value="Container Orchestration" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="NdRNJCVhxR-TxfGLDdOu-19">
+          <mxGeometry x="55" y="30" width="150" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="NdRNJCVhxR-TxfGLDdOu-4" value="ZFS Mirror" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="700" width="1230" height="30" as="geometry" />
+        </mxCell>
       </root>
     </mxGraphModel>
   </diagram>
